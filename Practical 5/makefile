@@ -3,7 +3,7 @@ CXXFLAGS = -g -std=c++17
 SRC_FILES = $(wildcard *.cpp)
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 TARGET = Practical5 
-ZIP_FILE = u23676150.zip
+ZIP_FILE = u23533693.zip
 
 all: $(TARGET)
 

@@ -3,9 +3,9 @@
 #include "Light.h"
 #include "Thermostat.h"
 #include "DoorLock.h"
-/*#include "LegacyThermostat.h"
-#include "SmartThermostatAdapter.h"
-#include "TurnOffAllLights.h"
+#include "OldThermostat.h"
+#include "SmartThermostatIntegrator.h"
+/*#include "TurnOffAllLights.h"
 #include "Sensor.h"*/
 
 int main() {
@@ -21,7 +21,7 @@ int main() {
 
     // 2. Testing the Thermostat class
     std::cout << "Testing Thermostat class:" << std::endl;
-    Device *thermostat = new Thermostat();
+    Device *thermostat = new Thermostat(20);
     std::cout << "Initial status: " << thermostat->getStatus() << std::endl;
     thermostat->performAction("SetTemperature");
     std::cout << "After setting temperature: " << thermostat->getStatus() << std::endl;
@@ -37,9 +37,9 @@ int main() {
     std::cout << "After Unlock: " << lock->getStatus() << std::endl;
     std::cout << std::endl;
 
-    /*// 4. Testing the LegacyThermostat class
+   // 4. Testing the LegacyThermostat class
     std::cout << "Testing LegacyThermostat class:" << std::endl;
-    LegacyThermostat legacyThermo;
+    OldThermostat legacyThermo;
     legacyThermo.setTemperature(18.5);
     std::cout << "Legacy thermostat temperature: " << legacyThermo.getTemperature() << std::endl;
     legacyThermo.setTemperature(21.0);
@@ -47,14 +47,14 @@ int main() {
     std::cout << std::endl;
 
     // 5. Testing the SmartThermostatAdapter class
-    std::cout << "Testing SmartThermostatAdapter class:" << std::endl;
-    SmartThermostatAdapter adapter(&legacyThermo);
-    std::cout << "Adapter status: " << adapter.getStatus() << std::endl;
-    adapter.performAction("SetTemperature");
-    std::cout << "Adapter status after setting temperature: " << adapter.getStatus() << std::endl;
+    std::cout << "Testing SmartThermostatIntegrator class:" << std::endl;
+    Device *adapter = new SmartThermostatIntegrator();
+    std::cout << "Adapter status: " << adapter->getStatus() << std::endl;
+    adapter->performAction("SetTemperature");
+    std::cout << "Adapter status after setting temperature: " << adapter->getStatus() << std::endl;
     std::cout << std::endl;
 
-    // 6. Testing the TurnOffAllLights command
+     /*// 6. Testing the TurnOffAllLights command
     std::cout << "Testing TurnOffAllLights command:" << std::endl;
     Light light1, light2;
     light1.performAction("ToggleOn");

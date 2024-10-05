@@ -1,5 +1,6 @@
 Component 1:
 -Add functions from spec
+-removed targetTemperature and just asked for temp as constructor parameter.
 
 Component 2:
 -Adapter implemented incorrectly in diagram. Legacy thermostat should be its own class. SmartAdapter should inherit from smart devices. If you want me to explain why, lmk and i'll send you a voicenote.

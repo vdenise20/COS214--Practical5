@@ -6,9 +6,9 @@
 class Thermostat : public Device {
 private:
     double currentTemperature;
-    double targetTemperature;
 public:
-    Thermostat();
+    Thermostat(double temperature);
+    double getTemperature() const;
     std::string getStatus() const override;
     void performAction(const std::string &action) override;
     std::string getDeviceType() const override;

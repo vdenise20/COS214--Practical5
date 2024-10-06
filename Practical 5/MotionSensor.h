@@ -10,12 +10,7 @@ private:
 public:
     MotionSensor() : motionDetected(false) {}
 
-    void detectMotion() { 
-        motionDetected = true; 
-        notify();
-    }
-
-    bool getMotionStatus() const { return motionDetected; }
+    void detectMotion() override; // Detect motion and notify devices
 };
 
-#endif  // MOTIONSENSOR_H
+#endif // MOTIONSENSOR_H

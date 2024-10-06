@@ -6,10 +6,14 @@ std::string SmartThermostatIntegrator::getStatus() const {
 
 void SmartThermostatIntegrator::performAction(const std::string &action) {
     if (action == "SetTemperature") {
-        setTemperature(22.0);  // Example action
+        setTemperature(22.0);
     }
 }
 
 std::string SmartThermostatIntegrator::getDeviceType() const {
     return "Thermostat";
+}
+
+void SmartThermostatIntegrator::update(Sensor* sensor) {
+    performAction("SetTemperature");
 }

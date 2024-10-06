@@ -14,3 +14,7 @@ void DoorLock::performAction(const std::string &action) {
 std::string DoorLock::getDeviceType() const {
     return "DoorLock";
 }
+
+void DoorLock::update(Sensor* sensor) {
+    performAction("Unlock");
+}

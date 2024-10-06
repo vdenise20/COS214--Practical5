@@ -12,6 +12,7 @@ public:
     std::string getStatus() const override;
     void performAction(const std::string &action) override;
     std::string getDeviceType() const override;
+    void update(Sensor* sensor) override;
 };
 
 #endif // THERMOSTAT_H

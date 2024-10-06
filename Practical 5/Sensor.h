@@ -2,6 +2,7 @@
 #define SENSOR_H
 
 #include <vector>
+#include <algorithm>
 #include "Device.h"
 
 class Sensor {
@@ -17,11 +18,15 @@ public:
         observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
     }
 
-    void notify() {
+    virtual void notify() {
         for (Device* observer : observers) {
             observer->update(this);
         }
     }
+
+    virtual void detectMotion() {}
+    virtual void unlock() {}
+    virtual void checkTemp(float newTemp){}
 };
 
 #endif  // SENSOR_H

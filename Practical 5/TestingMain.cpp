@@ -9,7 +9,10 @@
 #include "LockAllDoors.h"
 #include "MacroRoutine.h"
 #include "ThermostatCommand.h"
-/*#include "Sensor.h"*/
+#include "RemoteControl.h"
+#include "MotionSensor.h"
+#include "DoorLockSensor.h"
+#include "TemperatureSensor.h"
 
 int main() {
     // 1. Testing the Light class
@@ -84,7 +87,11 @@ int main() {
 
     // Execute the routine
     std::cout << "\nExecuting Goodnight routine..." << std::endl;
-    goodnightRoutine->execute();
+    
+    RemoteControl remote;
+
+    remote.setCommand(goodnightRoutine);
+    remote.pressButton();
 
     // Display the status of the devices after executing commands
     std::cout << "\nStatuses after executing Goodnight routine:" << std::endl;
@@ -95,24 +102,46 @@ int main() {
     std::cout << "Thermostat Status: " << thermostat2->getStatus() << std::endl;
 
     // Test Undo Functionality
-    std::cout << "\nUndoing last commands..." << std::endl;
+    std::cout << "\nRemoving procedures..." << std::endl;
     goodnightRoutine->removeProcedure(turnOffLightsCommand); // Undo specific commands
     goodnightRoutine->removeProcedure(lockAllDoorsCommand);
     goodnightRoutine->removeProcedure(&adjustThermostatCommand);
     goodnightRoutine->execute(); // Revert changes if desired
 
-    /*// 7. Testing the Sensor class
+    // 7. Testing the Sensor class
     std::cout << "Testing Sensor class:" << std::endl;
-    Sensor motionSensor;
-    motionSensor.addDevice(&light1);
-    motionSensor.addDevice(&lock);
-    std::cout << "Light1 initial status: " << light1.getStatus() << std::endl;
-    std::cout << "DoorLock initial status: " << lock.getStatus() << std::endl;
+    Sensor *motionSensor = new MotionSensor();
+    Sensor *doorLockSensor = new DoorLockSensor();
+    Sensor *temperatureSensor = new TemperatureSensor(25.0);  // Threshold is set to 25 degrees Celsius
 
-    motionSensor.notifyDevices();
-    std::cout << "Light1 status after notify: " << light1.getStatus() << std::endl;  // Lights should turn on
-    std::cout << "DoorLock status after notify: " << lock.getStatus() << std::endl;  // Door remains unlocked
-    std::cout << std::endl;*/
+    // Register devices to sensors
+    motionSensor->attach(livingRoomLight);  // Register light to be notified by the motion sensor
+    doorLockSensor->attach(frontDoor);  // Register door lock to be notified by the door lock sensor
+    temperatureSensor->attach(thermostat); // Register light to the temperature sensor for notification
+
+    // Initial device statuses
+    std::cout << "Initial Statuses:" << std::endl;
+    std::cout << "Living Room Light: " << livingRoomLight->getStatus() << std::endl;
+    std::cout << "Front Door Lock: " << frontDoor->getStatus() << std::endl;
+
+    // Simulate motion detection
+    std::cout << "\nMotion detected..." << std::endl;
+    motionSensor->detectMotion();  // Notify devices connected to the motion sensor
+    std::cout << "Living Room Light (after motion): " << livingRoomLight->getStatus() << std::endl;
+
+    // Simulate door unlocking
+    std::cout << "\nDoor unlocking..." << std::endl;
+    doorLockSensor->unlock();  // Notify devices connected to the door lock sensor
+    std::cout << "Front Door Lock (after unlocking): " << frontDoor->getStatus() << std::endl;
+
+    // Simulate temperature change crossing threshold
+    std::cout << "\nTemperature rising to 26°C..." << std::endl;
+    temperatureSensor->checkTemp(26.0);  // Notify devices if the temperature crosses the threshold
+    std::cout << "Thermostat (after temperature threshold crossed): " << thermostat->getStatus() << std::endl;
+
+    motionSensor->detach(livingRoomLight);
+    doorLockSensor->detach(frontDoor);  // Register door lock to be notified by the door lock sensor
+    temperatureSensor->detach(thermostat); // Register light to the temperature sensor for notification
 
     delete light;
     delete thermostat;
@@ -123,5 +152,8 @@ int main() {
     delete turnOffLightsCommand;
     delete lockAllDoorsCommand;
     delete goodnightRoutine;
+    delete motionSensor;
+    delete doorLockSensor;
+    delete temperatureSensor;
     return 0;
 }

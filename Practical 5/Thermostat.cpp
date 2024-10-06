@@ -19,3 +19,7 @@ double Thermostat::getTemperature() const {
 std::string Thermostat::getDeviceType() const {
     return "Thermostat";
 }
+
+void Thermostat::update(Sensor* sensor) {
+    performAction("SetTemperature");
+}

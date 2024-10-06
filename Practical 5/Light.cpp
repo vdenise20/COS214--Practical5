@@ -14,3 +14,7 @@ void Light::performAction(const std::string &action) {
 std::string Light::getDeviceType() const {
     return "Light";
 }
+
+void Light::update(Sensor* sensor) {
+    performAction("ToggleOn");
+}

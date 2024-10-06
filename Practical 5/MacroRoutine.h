@@ -11,8 +11,8 @@ private:
 public:
     MacroRoutine();
     void execute() override;
-    void addProcedures(Command* procedure);
-    void removeProcedures(Command* procedure);
+    void addProcedure(Command* procedure);
+    void removeProcedure(Command* procedure);
 };
 #endif //MACROROUTINE_H
 

@@ -10,9 +10,9 @@ void MacroRoutine::execute() {
         procedure->execute();
     }
 }
-void MacroRoutine::addProcedures(Command* procedure) {
+void MacroRoutine::addProcedure(Command* procedure) {
     procedures.push_back(procedure);
 }
-void MacroRoutine::removeProcedures(Command* procedure) {
+void MacroRoutine::removeProcedure(Command* procedure) {
     procedures.erase(std::remove(procedures.begin(), procedures.end(), procedure), procedures.end());
 }

@@ -6,11 +6,11 @@
 
 class DoorLockCommand : public Command {
 private:
-    DoorLock* doorLock;
+    Device* doorLock;
     bool previousState;
 
 public:
-    DoorLockCommand(DoorLock* lock);
+    DoorLockCommand(Device* lock);
     void execute() override;
 };
 

@@ -5,8 +5,11 @@
 #include "DoorLock.h"
 #include "OldThermostat.h"
 #include "SmartThermostatIntegrator.h"
-/*#include "TurnOffAllLights.h"
-#include "Sensor.h"*/
+#include "TurnOffAllLights.h"
+#include "LockAllDoors.h"
+#include "MacroRoutine.h"
+#include "ThermostatCommand.h"
+/*#include "Sensor.h"*/
 
 int main() {
     // 1. Testing the Light class
@@ -54,23 +57,51 @@ int main() {
     std::cout << "Adapter status after setting temperature: " << adapter->getStatus() << std::endl;
     std::cout << std::endl;
 
-     /*// 6. Testing the TurnOffAllLights command
-    std::cout << "Testing TurnOffAllLights command:" << std::endl;
-    Light light1, light2;
-    light1.performAction("ToggleOn");
-    light2.performAction("ToggleOn");
-    std::cout << "Light1 status: " << light1.getStatus() << std::endl;
-    std::cout << "Light2 status: " << light2.getStatus() << std::endl;
+    Device* livingRoomLight = new Light();
+    Device* frontDoor = new DoorLock();
+    Thermostat* thermostat2 = new Thermostat(20);
 
-    std::vector<SmartDevice*> devices = {&light1, &light2};
-    TurnOffAllLights turnOffCommand(devices);
-    turnOffCommand.execute();
-    
-    std::cout << "Light1 status after TurnOffAll: " << light1.getStatus() << std::endl;
-    std::cout << "Light2 status after TurnOffAll: " << light2.getStatus() << std::endl;
-    std::cout << std::endl;
+    // Initial statuses
+    std::cout << "Initial Statuses:" << std::endl;
+    std::cout << "Living Room Light: " << livingRoomLight->getStatus() << std::endl;
+    std::cout << "Front Door Lock: " << frontDoor->getStatus() << std::endl;
+    std::cout << "Thermostat Status: " << thermostat->getStatus() << std::endl;
 
-    // 7. Testing the Sensor class
+    std::vector<Device*> lights = {livingRoomLight, light};
+    std::vector<Device*> doors = {frontDoor, lock};
+    // Create command instances
+    Command *turnOffLightsCommand = new TurnOffAllLights(lights);
+    Command *lockAllDoorsCommand = new LockAllDoors(doors);
+    ThermostatCommand adjustThermostatCommand(thermostat2, 22); // Set target temperature to 22°C
+
+    // Create a macro routine for a "Goodnight" routine
+    MacroRoutine *goodnightRoutine = new MacroRoutine();
+
+    // Add commands to the routine
+    goodnightRoutine->addProcedure(turnOffLightsCommand);
+    goodnightRoutine->addProcedure(lockAllDoorsCommand);
+    goodnightRoutine->addProcedure(&adjustThermostatCommand);
+
+    // Execute the routine
+    std::cout << "\nExecuting Goodnight routine..." << std::endl;
+    goodnightRoutine->execute();
+
+    // Display the status of the devices after executing commands
+    std::cout << "\nStatuses after executing Goodnight routine:" << std::endl;
+    std::cout << "Living Room Light: " << livingRoomLight->getStatus() << std::endl;
+    std::cout << "Kitchen Light: " << light->getStatus() << std::endl;
+    std::cout << "Front Door Lock: " << frontDoor->getStatus() << std::endl;
+    std::cout << "Back Door Lock: " << lock->getStatus() << std::endl;
+    std::cout << "Thermostat Status: " << thermostat2->getStatus() << std::endl;
+
+    // Test Undo Functionality
+    std::cout << "\nUndoing last commands..." << std::endl;
+    goodnightRoutine->removeProcedure(turnOffLightsCommand); // Undo specific commands
+    goodnightRoutine->removeProcedure(lockAllDoorsCommand);
+    goodnightRoutine->removeProcedure(&adjustThermostatCommand);
+    goodnightRoutine->execute(); // Revert changes if desired
+
+    /*// 7. Testing the Sensor class
     std::cout << "Testing Sensor class:" << std::endl;
     Sensor motionSensor;
     motionSensor.addDevice(&light1);
@@ -86,5 +117,11 @@ int main() {
     delete light;
     delete thermostat;
     delete lock;
+    delete livingRoomLight;
+    delete frontDoor;
+    delete thermostat2;
+    delete turnOffLightsCommand;
+    delete lockAllDoorsCommand;
+    delete goodnightRoutine;
     return 0;
 }

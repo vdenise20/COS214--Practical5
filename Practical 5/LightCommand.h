@@ -6,11 +6,11 @@
 
 class LightCommand : public Command {
 private:
-    Light* light;
+    Device* light;
     bool previousState;
 
 public:
-    LightCommand(Light* light);
+    LightCommand(Device* light);
     void execute() override;
 };
 

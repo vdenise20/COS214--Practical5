@@ -1,6 +1,6 @@
 #include "LightCommand.h"
 
-LightCommand::LightCommand(Light* light) : light(light), previousState(light->getStatus() == "on") {}
+LightCommand::LightCommand(Device* light) : light(light), previousState(light->getStatus() == "on") {}
 
 void LightCommand::execute() {
     previousState = light->getStatus() == "on";
